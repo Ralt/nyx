@@ -4,14 +4,12 @@
 (defclass connection ()
   ((incoming-queue
     :documentation "The incoming messages queue"
-    :initarg :incoming-queue
-    :initform *incoming-queue*
-    :accessor incoming-queue)
+    :initform (lparallel.queue:make-queue)
+    :reader incoming-queue)
    (outgoing-queue
     :documentation "The ougoing messages queue"
-    :initarg :outgoing-queue
-    :initform *outgoing-queue*
-    :accessor outgoing-queue)
+    :initform (lparallel.queue:make-queue)
+    :reader outgoing-queue)
    (network
     :documentation "The network to connect to"
     :initarg :network
@@ -39,8 +37,12 @@
                     :name (cat "Incoming loop for " (server network)))
     (bt:make-thread #'(lambda ()
                         (loop
-                           (trigger-hooks
+                           (hook-trigger
                             (lparallel.queue:pop-queue (outgoing-queue conn)))))
                     :name (cat "Outgoing loop for " (server network)))
-    (socket-write socket (cat "NICK " nickname))
-    (socket-write socket (cat "USER " nickname " 8 * : " nickname))))
+    (initialize-nickname conn)))
+
+(defun initialize-nickname ((conn connection))
+  "Initializes the nickname"
+  (socket-write socket (cat "NICK " nickname))
+  (socket-write socket (cat "USER " nickname " 8 * : " nickname)))
