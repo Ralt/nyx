@@ -2,15 +2,7 @@
 
 
 (defclass connection ()
-  ((incoming-queue
-    :documentation "The incoming messages queue"
-    :initform (lparallel.queue:make-queue)
-    :reader incoming-queue)
-   (outgoing-queue
-    :documentation "The ougoing messages queue"
-    :initform (lparallel.queue:make-queue)
-    :reader outgoing-queue)
-   (network
+  ((network
     :documentation "The network to connect to"
     :initarg :network
     :initform (error "Must supply a network.")
@@ -32,17 +24,12 @@
     (setf socket (socket-create (server network) (port network)))
     (bt:make-thread #'(lambda ()
                         (loop
-                           (lparallel.queue:push-queue (socket-read socket)
-                                                       (incoming-queue conn))))
-                    :name (cat "Incoming loop for " (server network)))
-    (bt:make-thread #'(lambda ()
-                        (loop
-                           (hook-trigger
-                            (lparallel.queue:pop-queue (outgoing-queue conn)))))
-                    :name (cat "Outgoing loop for " (server network)))
+                           (hook-trigger (socket-read socket))))
+                    :name (cat "IRC connection for " (server network)))
     (initialize-nickname conn)))
 
-(defun initialize-nickname ((conn connection))
+(defmethod initialize-nickname ((conn connection))
   "Initializes the nickname"
-  (socket-write socket (cat "NICK " nickname))
-  (socket-write socket (cat "USER " nickname " 8 * : " nickname)))
+  (let ((socket (socket conn)))
+    (socket-write conn (cat "NICK " nickname))
+    (socket-write conn (cat "USER " nickname " 8 * : " nickname))))
