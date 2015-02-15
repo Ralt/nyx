@@ -22,7 +22,7 @@
     (setf (socket conn) (socket-create (server network) (port network)))
     (bt:make-thread #'(lambda ()
                         (loop
-                           (hook-trigger (socket-read (socket conn)))))
+                           (hook-trigger conn (socket-read (socket conn)))))
                     :name (cat "IRC connection for " (server network))
                     :initial-bindings (list (cons '*standard-output* *standard-output*)))
     (initialize-nickname conn)))
