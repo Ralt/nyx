@@ -1,5 +1,13 @@
 (defpackage #:nyx
-  (:use #:cl))
+  (:use #:cl)
+  (:export :defhook
+           :connection
+           :network
+           :connect
+           :message-parse
+           :socket-write
+           :socket
+           :*connection*))
 
 (in-package #:nyx)
 

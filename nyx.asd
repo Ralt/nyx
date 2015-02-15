@@ -10,5 +10,8 @@
                          (:file "socket")
                          (:file "hook")
                          (:file "network")
-                         (:file "connection")
-                         (:file "nyx")))))
+                         (:file "connection")))
+               (:module "lisp"
+                        :components
+                        ((:file "package")
+                         (:file "client")))))
