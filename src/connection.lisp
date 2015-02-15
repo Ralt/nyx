@@ -9,7 +9,7 @@
     :reader network)
    (socket
     :documentation "The usocket socket"
-    :reader socket)))
+    :accessor socket)))
 
 (defmethod initialize-instance :after ((conn connection) &key)
   (unless (eq (type-of (network conn)) 'network)
@@ -18,18 +18,18 @@
 
 (defmethod connect ((conn connection))
   "Connects to the network."
-  (let* ((socket (socket conn))
-         (network (network conn))
-         (nickname (nickname network)))
-    (setf socket (socket-create (server network) (port network)))
+  (let ((network (network conn)))
+    (setf (socket conn) (socket-create (server network) (port network)))
     (bt:make-thread #'(lambda ()
                         (loop
-                           (hook-trigger (socket-read socket))))
-                    :name (cat "IRC connection for " (server network)))
+                           (hook-trigger (socket-read (socket conn)))))
+                    :name (cat "IRC connection for " (server network))
+                    :initial-bindings (list (cons '*standard-output* *standard-output*)))
     (initialize-nickname conn)))
 
 (defmethod initialize-nickname ((conn connection))
   "Initializes the nickname"
-  (let ((socket (socket conn)))
-    (socket-write conn (cat "NICK " nickname))
-    (socket-write conn (cat "USER " nickname " 8 * : " nickname))))
+  (let ((socket (socket conn))
+        (nickname (nickname (network conn))))
+    (socket-write socket (cat "NICK " nickname))
+    (socket-write socket (cat "USER " nickname " 8 * : " nickname))))
