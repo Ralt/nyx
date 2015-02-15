@@ -1,2 +1,0 @@
-(defpackage #:nyx
-  (:use #:cl))

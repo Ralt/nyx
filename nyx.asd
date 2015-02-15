@@ -3,6 +3,11 @@
   :author "Florian Margaine <florian@margaine.com>"
   :license "MIT License"
   :serial t
-  :depends-on ("usocket" "lparallel" "bordeaux-threads")
-  :components ((:file "package")
-               (:file "nyx")))
+  :depends-on ("usocket" "lparallel" "bordeaux-threads" "cl-ppcre")
+  :components ((:module "src"
+                        :components
+                        ((:file "package")
+                         (:file "socket")
+                         (:file "network")
+                         (:file "connection")
+                         (:file "nyx")))))
