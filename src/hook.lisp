@@ -26,4 +26,4 @@
 
 (defhook ping (conn raw-message)
   "Answers the PING commands"
-  (socket-write (socket conn) (cat "PONG " (message-parse raw-message))))
+  (socket-write (socket conn) (cat "PONG " (message-parse-ping raw-message))))

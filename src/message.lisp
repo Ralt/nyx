@@ -1,8 +1,8 @@
 (in-package #:nyx)
 
 
-(defun message-parse (raw-message)
-  "Gets a message from a raw message, in the most common format"
+(defun message-parse-ping (raw-message)
+  "Parses a PING message."
   (format nil "~{~A~^ ~}" (cddr (cl-ppcre:split " " raw-message))))
 
 (defun message-parse-privmsg (raw-message)

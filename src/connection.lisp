@@ -13,8 +13,7 @@
 
 (defmethod initialize-instance :after ((conn connection) &key)
   (unless (eq (type-of (network conn)) 'network)
-    (error "network must be of type NETWORK."))
-  (setf *connection* conn))
+    (error "network must be of type NETWORK.")))
 
 (defmethod connect ((conn connection))
   "Connects to the network."
