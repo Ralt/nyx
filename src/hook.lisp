@@ -27,7 +27,3 @@
 (defhook ping (conn raw-message)
   "Answers the PING commands"
   (socket-write (socket conn) (cat "PONG " (message-parse raw-message))))
-
-(defun message-parse (raw-message)
-  "Gets a message from a raw message, in the most common format"
-  (format nil "~{~A~^ ~}" (cddr (cl-ppcre:split " " raw-message))))

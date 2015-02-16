@@ -11,10 +11,9 @@
   "Defines all the hooks"
   (nyx:defhook privmsg (conn raw-message)
     (declare (ignore conn))
-    (multiple-value-bind (_ matches)
-        (cl-ppcre:scan-to-strings "^:(\\w+)!" raw-message)
-      (declare (ignore _))
-      (format t "<~A> ~A~%" (elt matches 0) (nyx:message-parse raw-message)))))
+    (multiple-value-bind (from message)
+        (nyx:message-parse-privmsg raw-message)
+      (format t "<~A> ~A~%" from message))))
 
 (defun join (dest)
   (nyx:socket-write (nyx:socket nyx:*connection*) (cat "JOIN " dest))

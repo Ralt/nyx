@@ -8,6 +8,7 @@
                         :components
                         ((:file "package")
                          (:file "socket")
+                         (:file "message")
                          (:file "hook")
                          (:file "network")
                          (:file "connection")))

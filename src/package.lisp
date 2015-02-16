@@ -5,6 +5,7 @@
            :network
            :connect
            :message-parse
+           :message-parse-privmsg
            :socket-write
            :socket
            :*connection*))
