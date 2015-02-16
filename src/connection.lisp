@@ -33,15 +33,15 @@
                     :initial-bindings (list (cons '*standard-output* *standard-output*)))
     (initialize-nickname conn)))
 
-(defmethod initialize-nickname ((conn connection))
+(defmethod initialize-nickname ((conn connection) &key)
   "Initializes the nickname"
   (let ((nickname (nickname (network conn))))
     (write conn (cat "NICK " nickname))
     (write conn (cat "USER " nickname " 8 * : " nickname))))
 
-(defmethod write ((conn connection) msg)
+(defmethod write ((conn connection) msg &key)
   (socket-write (socket-stream conn) msg))
 
-(defmethod close ((conn connection) &optional (msg ""))
+(defmethod close ((conn connection) &optional (msg "") &key)
   (socket-write (socket-stream conn) (cat "QUIT " msg))
   (socket-close (socket conn)))

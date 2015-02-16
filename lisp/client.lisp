@@ -22,6 +22,7 @@
   (setf *dest* dest))
 
 (defun send (msg)
+  (format t "<~A> ~A~%" (nyx:nickname (nyx:network *connection*)) msg)
   (nyx:write *connection* (cat "PRIVMSG " *dest* " " msg)))
 
 (defun quit (&optional (msg ""))

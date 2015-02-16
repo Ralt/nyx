@@ -2,13 +2,27 @@
   (:use #:cl)
   (:shadowing-import-from :cl :write)
   (:export :main
+
+           ;; misc
            :defhook
+
+           ;; classes
            :connection
            :network
+
+           ;; connection slots
            :connect
-           :message-parse-privmsg
            :write
-           :close))
+           :close
+
+           ;; network slots
+           :nickname
+           :server
+           :port
+
+           ;; message goodies
+           :message-parse-privmsg
+           :message-parse-ping))
 
 (in-package #:nyx)
 

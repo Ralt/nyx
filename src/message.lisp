@@ -7,4 +7,13 @@
 
 (defun message-parse-privmsg (raw-message)
   "Parses a PRIVMSG message."
-  (values "foo" "bar"))
+  (let* ((parts (cl-ppcre:split " " raw-message))
+         (username (message-get-username (first parts))))
+    (values username (subseq (format nil "~{~A~^ ~}" (cdddr parts)) 1))))
+
+(defun message-get-username (user)
+  "Gets the username in a part like :<username>!...@..."
+  (multiple-value-bind (_ matches)
+      (cl-ppcre:scan-to-strings ":(\\w+)!.*" user)
+    (declare (ignore _))
+    (elt matches 0)))
