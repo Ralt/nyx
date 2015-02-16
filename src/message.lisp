@@ -34,14 +34,14 @@
     ;; (values user chan message)
     (values (subseq (first parts) 1)
             (third parts)
-            (subseq (remove-^M (fourth parts)) 1))))
+            (subseq (remove-^M (format nil "~{~A~^ ~}" (cdddr parts))) 1))))
 
 (defun message-parse-quit (raw-message)
   "Parses a QUIT raw message"
   (let ((parts (cl-ppcre:split " " raw-message)))
     ;; (values user message)
     (values (subseq (first parts) 1)
-            (remove-^M (third parts)))))
+            (subseq (remove-^M (format nil "~{~A~^ ~}" (cddr parts))) 1))))
 
 (defun remove-^M (string)
   (subseq string 0 (- (length string) 1)))
