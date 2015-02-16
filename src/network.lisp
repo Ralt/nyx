@@ -16,4 +16,8 @@
     :documentation "The nickname to have on the network."
     :initarg :nickname
     :initform (error "Must supply a nickname.")
-    :accessor nickname)))
+    :accessor nickname)
+   (password
+    :documentation "The password of the network."
+    :initarg :password
+    :accessor password)))

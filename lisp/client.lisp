@@ -64,7 +64,7 @@
 
 (defun show-last-ten (messages)
   (loop for i from (if (< (length messages) 9) (- (length messages) 1) 9) downto 0
-     do (princ (elt messages i))))
+     do (format t "~A" (c (elt messages i)))))
 
 (defun send (msg)
   (nyx:write *connection* (cat "PRIVMSG " *dest* " :" msg))
