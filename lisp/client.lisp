@@ -4,6 +4,13 @@
 (defvar *connection*)
 (defvar *dest*)
 
+(defun send-reader (stream char)
+  (declare (ignore char))
+  (list (quote send) (read stream nil t)))
+
+;; So that we can use i"send something"
+(set-macro-character #\i #'send-reader)
+
 (defun start (conn)
   (define-hooks)
   (nyx:connect conn)
