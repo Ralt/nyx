@@ -7,6 +7,8 @@
   "Finds the hooks to trigger for an IRC raw message."
   (multiple-value-bind (val presentp)
       (gethash (string-upcase (get-command raw-message)) *hooks*)
+    ;; @debug
+    (format t "COMMAND: ~A~%" (get-command raw-message))
     (if presentp
         (funcall val conn raw-message)
         (format t "UNHANDLED: ~A~%" raw-message))))
@@ -26,4 +28,6 @@
 
 (defhook ping (conn raw-message)
   "Answers the PING commands"
-  (socket-write (socket conn) (cat "PONG " (message-parse-ping raw-message))))
+  ;; @debug
+  (format t "PING received: ~A~%" (message-parse-ping raw-message))
+  (socket-write (socket-stream conn) (cat "PONG " (message-parse-ping raw-message))))

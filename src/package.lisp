@@ -1,14 +1,14 @@
 (defpackage #:nyx
   (:use #:cl)
-  (:export :defhook
+  (:shadowing-import-from :cl :write)
+  (:export :main
+           :defhook
            :connection
            :network
            :connect
-           :message-parse
            :message-parse-privmsg
-           :socket-write
-           :socket
-           :*connection*))
+           :write
+           :close))
 
 (in-package #:nyx)
 
