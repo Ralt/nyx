@@ -2,6 +2,7 @@
 
 
 (defvar *hooks* (make-hash-table :test 'equal))
+(defvar *show-unhandled* nil)
 
 (defun hook-trigger (conn raw-message)
   "Finds the hooks to trigger for an IRC raw message."
@@ -9,7 +10,7 @@
       (gethash (string-upcase (get-command raw-message)) *hooks*)
     (if presentp
         (funcall val conn raw-message)
-        (format t "UNHANDLED: ~A~%" raw-message))))
+        (when *show-unhandled* (format t "UNHANDLED: ~A~%" raw-message)))))
 
 (defun get-command (raw-message)
   "Gets the command in a raw message."
