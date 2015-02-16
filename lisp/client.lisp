@@ -54,7 +54,7 @@
     (declare (ignore conn))
     (multiple-value-bind (user message)
         (nyx:message-parse-quit raw-message)
-      (format t "~A has quit: ~A" user message))))
+      (format t "~A has quit: ~A~%" user message))))
 
 (defun join (dest)
   (if (gethash dest *messages*)
