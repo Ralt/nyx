@@ -1,6 +1,6 @@
 (defpackage #:nyx
   (:use #:cl)
-  (:shadowing-import-from :cl :write)
+  (:shadow :write :close)
   (:export :main
 
            ;; misc

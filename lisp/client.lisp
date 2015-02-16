@@ -3,13 +3,14 @@
 
 (defvar *connection*)
 (defvar *dest*)
+(defvar *messages* (make-hash-table :test #'equal))
 
-(defun send-reader (stream char)
-  (declare (ignore char))
+(defun send-reader (stream sub-char numarg)
+  (declare (ignore sub-char numarg))
   (list (quote send) (read stream nil t)))
 
 ;; So that we can use i"send something"
-(set-macro-character #\i #'send-reader)
+(set-dispatch-macro-character #\# #\i #'send-reader)
 
 (defun start (conn)
   (define-hooks)
@@ -30,6 +31,7 @@
 
 (defun send (msg)
   (nyx:write *connection* (cat "PRIVMSG " *dest* " :" msg))
+  (push msg (gethash *dest* *messages*))
   (format nil "<~A> ~A" (nyx:nickname (nyx:network *connection*)) msg))
 
 (defun quit (&optional (msg ""))
