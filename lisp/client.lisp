@@ -5,6 +5,10 @@
 (defvar *dest*)
 (defvar *messages* (make-hash-table :test #'equal))
 
+(defun c (string)
+  "Prepends ~ with ~ so that they're format'able"
+  (cl-ppcre:regex-replace-all "~" string "~~"))
+
 (defun send-reader (stream sub-char numarg)
   (declare (ignore sub-char numarg))
   (list (quote send) (read stream nil t)))
@@ -26,7 +30,31 @@
       (let ((m (format nil "<~A> ~A~%" from message)))
         (push m (gethash to *messages*))
         (when (string= *dest* to)
-          (format t m))))))
+          (format t (c m))))))
+
+  (nyx:defhook join (conn raw-message)
+    (declare (ignore conn))
+    (multiple-value-bind (user chan)
+        (nyx:message-parse-join raw-message)
+      (let ((m (format nil "~A has joined ~A~%" user chan)))
+        (push m (gethash chan *messages*))
+        (when (string= *dest* chan)
+          (format t (c m))))))
+
+  (nyx:defhook part (conn raw-message)
+    (declare (ignore conn))
+    (multiple-value-bind (user chan message)
+        (nyx:message-parse-part raw-message)
+      (let ((m (format nil "~A has left ~A: ~A~%" user chan message)))
+        (push m (gethash chan *messages*))
+        (when (string= *dest* chan)
+          (format t (c m))))))
+
+  (nyx:defhook quit (conn raw-message)
+    (declare (ignore conn))
+    (multiple-value-bind (user message)
+        (nyx:message-parse-quit raw-message)
+      (format t "~A has quit: ~A" user message))))
 
 (defun join (dest)
   (if (gethash dest *messages*)
@@ -36,7 +64,7 @@
 
 (defun show-last-ten (messages)
   (loop for i from (if (< (length messages) 9) (- (length messages) 1) 9) downto 0
-     do (format t (elt messages i))))
+     do (princ (elt messages i))))
 
 (defun send (msg)
   (nyx:write *connection* (cat "PRIVMSG " *dest* " :" msg))

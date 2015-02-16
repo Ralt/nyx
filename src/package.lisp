@@ -3,8 +3,9 @@
   (:shadow :write :quit)
   (:export :main
 
-           ;; misc
+           ;; hooks
            :defhook
+           :*show-unhandled*
 
            ;; classes
            :connection
@@ -23,6 +24,9 @@
 
            ;; message goodies
            :message-parse-privmsg
+           :message-parse-join
+           :message-parse-part
+           :message-parse-quit
            :message-parse-ping))
 
 (in-package #:nyx)
