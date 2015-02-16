@@ -1,6 +1,6 @@
 (defpackage #:nyx
   (:use #:cl)
-  (:shadow :write :close)
+  (:shadow :write :quit)
   (:export :main
 
            ;; misc
@@ -14,6 +14,7 @@
            :connect
            :write
            :close
+           :quit
 
            ;; network slots
            :nickname

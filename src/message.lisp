@@ -12,7 +12,7 @@
          ;; Remove the leading :
          (message (subseq (format nil "~{~A~^ ~}" (cdddr parts)) 1)))
     ;; Also remove the trailing ^M
-    (values username (subseq message 0 (- (length message) 1)))))
+    (values username (third parts) (subseq message 0 (- (length message) 1)))))
 
 (defun message-get-username (user)
   "Gets the username in a part like :<username>!...@..."

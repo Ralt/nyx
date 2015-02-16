@@ -9,7 +9,7 @@
   (declare (ignore sub-char numarg))
   (list (quote send) (read stream nil t)))
 
-;; So that we can use i"send something"
+;; So that we can use #i"send something"
 (set-dispatch-macro-character #\# #\i #'send-reader)
 
 (defun start (conn)
@@ -21,18 +21,29 @@
   "Defines all the hooks"
   (nyx:defhook privmsg (conn raw-message)
     (declare (ignore conn))
-    (multiple-value-bind (from message)
+    (multiple-value-bind (from to message)
         (nyx:message-parse-privmsg raw-message)
-      (format t "<~A> ~A~%" from message))))
+      (let ((m (format nil "<~A> ~A~%" from message)))
+        (push m (gethash to *messages*))
+        (when (string= *dest* to)
+          (format t m))))))
 
 (defun join (dest)
-  (nyx:write *connection* (cat "JOIN " dest))
+  (if (gethash dest *messages*)
+      (show-last-ten (gethash dest *messages*))
+      (nyx:write *connection* (cat "JOIN " dest)))
   (setf *dest* dest))
+
+(defun show-last-ten (messages)
+  (loop for i from (if (< (length messages) 9) (- (length messages) 1) 9) downto 0
+     do (format t (elt messages i))))
 
 (defun send (msg)
   (nyx:write *connection* (cat "PRIVMSG " *dest* " :" msg))
-  (push msg (gethash *dest* *messages*))
-  (format nil "<~A> ~A" (nyx:nickname (nyx:network *connection*)) msg))
+  (let ((m (format nil "<~A> ~A" (nyx:nickname (nyx:network *connection*)) msg)))
+    (push m (gethash *dest* *messages*))
+    m))
 
 (defun quit (&optional (msg ""))
-  (nyx:close *connection* msg))
+  (setf *messages* (make-hash-table :test #'equal))
+  (nyx:quit *connection* :message msg))

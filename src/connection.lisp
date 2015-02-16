@@ -42,6 +42,6 @@
 (defmethod write ((conn connection) msg &key)
   (socket-write (socket-stream conn) msg))
 
-(defmethod close ((conn connection) &optional (msg "") &key)
-  (socket-write (socket-stream conn) (cat "QUIT " msg))
+(defmethod quit ((conn connection) &key (message ""))
+  (socket-write (socket-stream conn) (cat "QUIT :" message))
   (socket-close (socket conn)))
