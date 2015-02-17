@@ -20,4 +20,5 @@
    (password
     :documentation "The password of the network."
     :initarg :password
+    :initform ""
     :accessor password)))

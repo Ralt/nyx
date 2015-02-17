@@ -35,12 +35,12 @@
 
 (defmethod initialize-nickname ((conn connection) &key)
   "Initializes the nickname"
-  (let* ((network (network conn))
-         (nickname (nickname network)))
-    (when (password network)
-      (write conn (cat "PASS " (password network))))
-    (write conn (cat "NICK " nickname))
-    (write conn (cat "USER " nickname " 8 * : " nickname))))
+  (let* ((net (network conn))
+         (nick (nickname net)))
+    (when (> (length (password net)) 0))
+      (write conn (cat "PASS " (password net)))
+    (write conn (cat "NICK " nick))
+    (write conn (cat "USER " nick " 8 * : " nick))))
 
 (defmethod write ((conn connection) msg &key)
   (socket-write (socket-stream conn) msg))
