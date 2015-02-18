@@ -1,0 +1,1 @@
+(in-package #:nyx.irc)

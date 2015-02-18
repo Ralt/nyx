@@ -15,4 +15,8 @@
                (:module "lisp"
                         :components
                         ((:file "package")
-                         (:file "client")))))
+                         (:file "client")))
+               (:module "irc"
+                        :components
+                        ((:file "package")
+                         (:file "server")))))
